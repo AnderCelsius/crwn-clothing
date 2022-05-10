@@ -1,8 +1,15 @@
-import Directory from "./components/directory/directory.component";
-import Categories from '../src/categories.json'
+import { Routes, Route } from "react-router-dom";
+import Home from "./routes/home/home.component";
+import Navigation from "./routes/navigation/navigation.component";
 
 function App() {
-  return <Directory categories={Categories}/>;
+  return (
+    <Routes>
+      <Route path="/" element={<Navigation />}>
+        <Route index element={<Home />} />
+      </Route>
+    </Routes>
+  );
 }
 
 export default App;
