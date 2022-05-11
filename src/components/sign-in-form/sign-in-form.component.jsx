@@ -14,26 +14,20 @@ const SignInForm = () => {
   const { email, password } = formFields;
   const {
     signInWithGooglePopup,
-    createUserDocumentFromAuth,
     signInAuthUserWithEmailAndPassword,
   } = firebase;
 
   const logGoogleUser = async () => {
-    const { user } = await signInWithGooglePopup();
-    console.log(user);
-    const userDocRef = await createUserDocumentFromAuth(user);
-    console.log(userDocRef);
+    await signInWithGooglePopup();
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
     try {
-      const response = await signInAuthUserWithEmailAndPassword(
+       await signInAuthUserWithEmailAndPassword(
         email,
         password
       );
-      console.log(response.user);
     } catch (error) {
       switch (error.code) {
         case "auth/wrong-password":
