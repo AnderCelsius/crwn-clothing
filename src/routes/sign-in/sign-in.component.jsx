@@ -1,3 +1,4 @@
+import SignUpForm from "../../components/sign-up-form/sign-up-form.component";
 import { firebase } from "../../utils/firebase/firebase.component";
 
 const SignIn = () => {
@@ -12,6 +13,7 @@ const SignIn = () => {
     <div>
       <h1>Sign In Page</h1>
       <button onClick={logGoogleUser}>Sign In</button>
+      <SignUpForm />
     </div>
   );
 };
