@@ -1,0 +1,5 @@
+{
+    "files.autoSave": "afterDelay",
+    "editor.fontFamily": "\"Fira Code Light\", Menlo, Monaco, 'Courier New', monospace",
+    "diffEditor.codeLens": true
+}
