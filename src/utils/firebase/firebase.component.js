@@ -7,9 +7,18 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
-  onAuthStateChanged
+  onAuthStateChanged,
 } from "firebase/auth";
-import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
+import {
+  getFirestore,
+  doc,
+  getDoc,
+  setDoc,
+  collection,
+  writeBatch,
+  query,
+  getDocs
+} from "firebase/firestore";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -33,6 +42,7 @@ const auth = getAuth();
 const signInWithGooglePopup = () => signInWithPopup(auth, provider);
 
 const db = getFirestore();
+
 const createUserDocumentFromAuth = async (userAuth, additionalInfo = {}) => {
   const userDocRef = doc(db, "users", userAuth.uid);
   console.log({ userDocRef });
@@ -48,7 +58,7 @@ const createUserDocumentFromAuth = async (userAuth, additionalInfo = {}) => {
         displayName,
         email,
         createdAt,
-        ...additionalInfo
+        ...additionalInfo,
       });
     } catch (error) {
       console.log("error creating user", error.message);
@@ -65,14 +75,46 @@ const createAuthUserWithEmailAndPassword = async (email, password) => {
 };
 
 const signInAuthUserWithEmailAndPassword = async (email, password) => {
-    if (!email || !password) return;
-  
-    return await signInWithEmailAndPassword(auth, email, password);
-  };
+  if (!email || !password) return;
+
+  return await signInWithEmailAndPassword(auth, email, password);
+};
 
 const signOutUser = async () => await signOut(auth);
 
-const onAuthStateChangedListner = (callback) => onAuthStateChanged(auth, callback);
+const onAuthStateChangedListner = (callback) =>
+  onAuthStateChanged(auth, callback);
+
+// This function adds a new collection to the firebase data store.
+const addCollectionAndDocuments = async (collectionKey, objectsToAdd) => {
+  const collectionRef = collection(db, collectionKey); 
+  const batch = writeBatch(db);
+
+  console.log({objectsToAdd})
+
+  objectsToAdd.forEach((object) => {
+    const docRef = doc(collectionRef, object.title.toLowerCase());
+    batch.set(docRef, object);
+  });
+
+  await batch.commit();
+  console.log("done");
+};
+
+// This function retrieves a categories collection from the firebase data store
+const getCategoriesAndDocuments = async () => {
+  const collectionRef = collection(db, "categories");
+  const q = query(collectionRef);
+
+  const querySnapshot = await getDocs(q);
+  const categoryMap = querySnapshot.docs.reduce((acc, docSnapshot) => {
+    const {title, items} = docSnapshot.data();
+    acc[title.toLowerCase()] = items
+    return acc;
+  }, {})
+
+  return categoryMap
+}
 
 export const firebase = {
   auth,
@@ -81,5 +123,7 @@ export const firebase = {
   createAuthUserWithEmailAndPassword,
   signInAuthUserWithEmailAndPassword,
   signOutUser,
-  onAuthStateChangedListner
+  onAuthStateChangedListner,
+  addCollectionAndDocuments,
+  getCategoriesAndDocuments
 };

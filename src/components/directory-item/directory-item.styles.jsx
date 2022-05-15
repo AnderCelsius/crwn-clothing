@@ -1,4 +1,6 @@
-.category-container {
+import styled from 'styled-components'
+
+export const DirectoryItemContainer = styled.div`
     min-width: 30%;
     height: 240px;
     flex: 1 1 auto;
@@ -17,7 +19,7 @@
         transition: transform 6s cubic-bezier(0.25, 0.45, 0.45, 0.95);
       }
   
-      & .category-body-container {
+      & .body {
         opacity: 0.9;
       }
     }
@@ -33,15 +35,15 @@
     &:last-child {
       margin-left: 7.5px;
     }
-  
-    .background-image {
+  `
+  export const BackgroundImage = styled.div `
       width: 100%;
       height: 100%;
       background-size: cover;
       background-position: center;
-    }
+   `
   
-    .category-body-container {
+export const Body = styled.div`
       height: 90px;
       padding: 0 25px;
       display: flex;
@@ -65,5 +67,5 @@
         font-size: 16px;
       }
     }
-  }
+ `
   
